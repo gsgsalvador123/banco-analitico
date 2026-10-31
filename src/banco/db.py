@@ -1,6 +1,7 @@
 """Conexión a SQL Server y despliegue de los scripts."""
 
 import re
+import time
 from pathlib import Path
 
 import pyodbc
@@ -9,16 +10,29 @@ from banco.config import DIR_SQL, ConexionSql, conexion_sql
 
 CARPETAS_EN_ORDEN = ("ddl", "proc", "vistas", "datos")
 SEPARADOR_GO = re.compile(r"^\s*GO\s*$", re.IGNORECASE | re.MULTILINE)
+INTENTOS_AZURE = 6
+ESPERA_AZURE_SEGUNDOS = 20
 
 
 def conectar(config: ConexionSql | None = None, base: str | None = None) -> pyodbc.Connection:
+    """Conecta y, en Azure, espera a que la base salga de la pausa."""
     config = config or conexion_sql()
-    return pyodbc.connect(config.cadena(base), autocommit=True)
+    intentos = INTENTOS_AZURE if config.autenticacion == "sql" else 1
+    for intento in range(1, intentos + 1):
+        try:
+            return pyodbc.connect(config.cadena(base), autocommit=True, timeout=30)
+        except pyodbc.Error:
+            if intento == intentos:
+                raise
+            time.sleep(ESPERA_AZURE_SEGUNDOS)
+    raise RuntimeError("Sin intentos de conexión")
 
 
 def crear_base(config: ConexionSql | None = None) -> None:
     """Crea la base local si no existe. En Azure la base se crea aparte, con la oferta gratuita."""
     config = config or conexion_sql()
+    if config.autenticacion == "sql":
+        return
     with conectar(config, "master") as cx:
         if cx.execute("SELECT DB_ID(?)", config.base).fetchval() is None:
             cx.execute(f"CREATE DATABASE [{config.base}]")
