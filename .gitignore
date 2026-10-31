@@ -1,0 +1,25 @@
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+
+# Datos: Berka se descarga, no se publica en el repositorio
+data/raw/
+data/landing/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Power BI: archivos locales de cada usuario
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+
+# Excel y Word abiertos
+~$*
+
+# Sistema
+Thumbs.db
+.DS_Store
