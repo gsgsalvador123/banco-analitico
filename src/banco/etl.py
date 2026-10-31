@@ -9,7 +9,7 @@ Uso:
 
 import argparse
 import json
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -26,6 +26,10 @@ TABLAS_STG = (
     "distrito", "cliente", "cuenta", "disp", "trans", "prestamo", "tarjeta",
     "cambio_cliente", "cambio_cuenta",
 )
+
+
+def _avance(mensaje: str) -> None:
+    print(f"{datetime.now():%H:%M:%S} {mensaje}", flush=True)
 
 
 class ErrorConciliacion(Exception):
@@ -64,11 +68,18 @@ def _cargar_archivo(cx: pyodbc.Connection, carpeta: Path, nombre: str) -> None:
     filas = list(tabla.itertuples(index=False, name=None))
     cursor = cx.cursor()
     cursor.fast_executemany = True
-    for inicio in range(0, len(filas), TAMANO_TANDA):
-        cursor.executemany(
-            f"INSERT stg.{nombre} ({columnas}) VALUES ({marcas})",
-            filas[inicio : inicio + TAMANO_TANDA],
-        )
+    # Confirmar por tandas evita escribir el registro de transacciones por cada fila.
+    cx.autocommit = False
+    try:
+        for inicio in range(0, len(filas), TAMANO_TANDA):
+            cursor.executemany(
+                f"INSERT stg.{nombre} ({columnas}) VALUES ({marcas})",
+                filas[inicio : inicio + TAMANO_TANDA],
+            )
+            cx.commit()
+    finally:
+        cx.autocommit = True
+    _avance(f"stg.{nombre}: {len(filas)} filas")
 
 
 def _conciliar_recepcion(cx: pyodbc.Connection, lote_id: int, control: dict) -> None:
@@ -121,10 +132,14 @@ def _cerrar_lote(cx, lote_id: int, recibidas: int, cargadas: int, apartadas: int
 
 
 def _marcar_error(cx, lote_id: int, error: Exception) -> None:
-    cx.execute(
-        "UPDATE ctl.lote SET estado = 'ERROR', fin = SYSUTCDATETIME(), mensaje = ? WHERE lote_id = ?",
-        str(error)[:4000], lote_id,
-    )
+    try:
+        cx.execute(
+            "UPDATE ctl.lote SET estado = 'ERROR', fin = SYSUTCDATETIME(), mensaje = ? "
+            "WHERE lote_id = ?",
+            str(error)[:4000], lote_id,
+        )
+    except pyodbc.Error:
+        _avance(f"No se pudo marcar el lote {lote_id}: se perdió la conexión")
 
 
 def _ejecutar(cx: pyodbc.Connection, carpeta: Path, nombres: tuple[str, ...], tipo: str) -> dict:
@@ -144,9 +159,12 @@ def _ejecutar(cx: pyodbc.Connection, carpeta: Path, nombres: tuple[str, ...], ti
         cx.autocommit = False
         try:
             cx.execute("EXEC dw.usp_cargar_maestros")
+            _avance("Maestros cargados")
             cx.execute("EXEC ctl.usp_validar_lote @lote_id = ?", lote_id)
+            _avance("Lote validado")
             cx.execute("EXEC dw.usp_cargar_dimensiones @fecha_negocio = ?", fecha)
             cx.execute("EXEC dw.usp_cargar_hechos @lote_id = ?", lote_id)
+            _avance("Hechos cargados")
             recibidas, cargadas, apartadas = _conciliar_carga(cx, lote_id)
             cx.commit()
         except Exception:
@@ -158,6 +176,7 @@ def _ejecutar(cx: pyodbc.Connection, carpeta: Path, nombres: tuple[str, ...], ti
         if tipo == "HISTORICO":
             for mes in _meses_del_historico(cx, fecha):
                 cx.execute("EXEC dw.usp_cargar_fotos @corte = ?", mes)
+                _avance(f"Foto de {mes:%Y-%m}")
         else:
             # Un movimiento atrasado puede cambiar el cierre del mes anterior.
             if simulador.dia_habil_anterior(fecha).month != fecha.month:

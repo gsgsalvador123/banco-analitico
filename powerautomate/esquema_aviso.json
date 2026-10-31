@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "properties": {
+    "estado": { "type": "string" },
+    "fecha_negocio": { "type": "string" },
+    "filas_cargadas": { "type": "integer" },
+    "filas_cuarentena": { "type": "integer" },
+    "url": { "type": "string" }
+  }
+}
