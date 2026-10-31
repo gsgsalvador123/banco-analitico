@@ -9,6 +9,7 @@ Uso:
 
 import argparse
 import json
+import os
 from datetime import date, datetime
 from pathlib import Path
 
@@ -218,6 +219,17 @@ def siguiente_fecha(cx: pyodbc.Connection) -> date | None:
     return siguiente if siguiente <= FECHA_FIN else None
 
 
+def _publicar_resultado(resultado: dict) -> None:
+    """Deja el resultado disponible para el aviso del workflow."""
+    salida = os.getenv("GITHUB_OUTPUT")
+    if not salida:
+        return
+    with open(salida, "a", encoding="utf-8") as archivo:
+        archivo.write(f"fecha_negocio={resultado['fecha']}\n")
+        archivo.write(f"filas_cargadas={resultado.get('cargadas', 0)}\n")
+        archivo.write(f"filas_cuarentena={resultado.get('cuarentena', 0)}\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("accion", choices=["preparar", "historico", "siguiente", "dia"])
@@ -236,7 +248,12 @@ def main() -> None:
             print(cargar_dia(cx, args.fecha))
         else:
             fecha = siguiente_fecha(cx)
-            print(cargar_dia(cx, fecha) if fecha else "La simulación ya terminó")
+            if fecha is None:
+                print("La simulación ya terminó")
+                return
+            resultado = cargar_dia(cx, fecha)
+            _publicar_resultado(resultado)
+            print(resultado)
 
 
 if __name__ == "__main__":

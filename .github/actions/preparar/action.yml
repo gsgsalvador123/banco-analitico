@@ -1,0 +1,36 @@
+name: Preparar entorno
+description: Instala Python, el driver de SQL Server y deja Berka en data/raw/berka
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: pip
+
+    - name: Instalar dependencias
+      shell: bash
+      run: pip install -r requirements.txt
+
+    - name: Instalar driver de SQL Server
+      shell: bash
+      run: |
+        if ! odbcinst -q -d | grep -q "ODBC Driver 18 for SQL Server"; then
+          curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc > /dev/null
+          echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/24.04/prod noble main" | sudo tee /etc/apt/sources.list.d/mssql-release.list
+          sudo apt-get update -qq
+          sudo ACCEPT_EULA=Y apt-get install -y -qq msodbcsql18
+        fi
+
+    - name: Recuperar Berka
+      uses: actions/cache@v4
+      with:
+        path: data/raw/berka
+        key: berka-affa4477
+
+    - name: Descargar Berka si no está
+      shell: bash
+      run: python -m banco.descarga
+      env:
+        PYTHONPATH: src

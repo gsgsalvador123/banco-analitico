@@ -1,0 +1,88 @@
+name: Carga diaria
+
+on:
+  schedule:
+    # 01:17 en Perú, de lunes a viernes.
+    - cron: "17 6 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+
+concurrency:
+  group: azure-sql
+
+env:
+  GRUPO: rg-banco-analitico
+
+jobs:
+  carga:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SERVIDOR: ${{ secrets.BA_SQL_SERVER }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/preparar
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Abrir el firewall a este runner
+        run: |
+          ip=$(curl -fsS https://api.ipify.org)
+          az sql server firewall-rule create -g "$GRUPO" -s "${SERVIDOR%%.*}" \
+            -n "gh-runner-${{ github.run_id }}" --start-ip-address "$ip" --end-ip-address "$ip" \
+            --output none
+
+      - name: Cargar el siguiente día
+        id: carga
+        run: python -m banco.etl siguiente
+        env:
+          PYTHONPATH: src
+          BA_SQL_SERVER: ${{ secrets.BA_SQL_SERVER }}
+          BA_SQL_DATABASE: ${{ secrets.BA_SQL_DATABASE }}
+          BA_SQL_DRIVER: ODBC Driver 18 for SQL Server
+          BA_SQL_AUTH: sql
+          BA_SQL_USER: ${{ secrets.BA_SQL_USER }}
+          BA_SQL_PASSWORD: ${{ secrets.BA_SQL_PASSWORD }}
+
+      - name: Cerrar el firewall
+        if: always()
+        run: |
+          az sql server firewall-rule delete -g "$GRUPO" -s "${SERVIDOR%%.*}" \
+            -n "gh-runner-${{ github.run_id }}"
+
+      - name: Avisar por Power Automate
+        if: always()
+        continue-on-error: true
+        run: |
+          jq -n \
+            --arg estado "${{ steps.carga.outcome == 'success' && 'OK' || 'ERROR' }}" \
+            --arg fecha "${{ steps.carga.outputs.fecha_negocio }}" \
+            --argjson cargadas "${{ steps.carga.outputs.filas_cargadas || 0 }}" \
+            --argjson cuarentena "${{ steps.carga.outputs.filas_cuarentena || 0 }}" \
+            --arg url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            '{estado: $estado, fecha_negocio: $fecha, filas_cargadas: $cargadas, filas_cuarentena: $cuarentena, url: $url}' \
+            | curl -fsS --retry 3 -o /dev/null -X POST -H "Content-Type: application/json" --data @- "$URL_AVISO"
+        env:
+          URL_AVISO: ${{ secrets.POWER_AUTOMATE_URL_CARGA }}
+
+      - name: Abrir un issue si falló
+        if: failure()
+        run: |
+          titulo="La carga diaria falló"
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          numero=$(gh issue list --state open --search "\"$titulo\" in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$numero" ]; then
+            gh issue comment "$numero" --body "Volvió a fallar: $url"
+          else
+            gh issue create --title "$titulo" --body "Revisar la ejecución: $url"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}

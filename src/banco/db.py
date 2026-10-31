@@ -31,7 +31,7 @@ def conectar(config: ConexionSql | None = None, base: str | None = None) -> pyod
 def crear_base(config: ConexionSql | None = None) -> None:
     """Crea la base local si no existe. En Azure la base se crea aparte, con la oferta gratuita."""
     config = config or conexion_sql()
-    if config.autenticacion == "sql":
+    if config.servidor.endswith(".database.windows.net"):
         return
     with conectar(config, "master") as cx:
         if cx.execute("SELECT DB_ID(?)", config.base).fetchval() is None:

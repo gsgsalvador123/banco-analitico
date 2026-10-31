@@ -30,6 +30,7 @@ class ConexionSql:
     autenticacion: str
     usuario: str
     clave: str
+    confiar_certificado: bool = False
 
     def cadena(self, base: str | None = None) -> str:
         partes = [
@@ -39,6 +40,8 @@ class ConexionSql:
         ]
         if self.autenticacion == "sql":
             partes += [f"UID={self.usuario}", f"PWD={self.clave}", "Encrypt=yes"]
+            if self.confiar_certificado:
+                partes.append("TrustServerCertificate=yes")
         else:
             # LocalDB solo acepta conexiones locales y no admite cifrado.
             partes += ["Trusted_Connection=yes", "Encrypt=no"]
@@ -53,4 +56,6 @@ def conexion_sql() -> ConexionSql:
         autenticacion=os.getenv("BA_SQL_AUTH", "windows"),
         usuario=os.getenv("BA_SQL_USER", ""),
         clave=os.getenv("BA_SQL_PASSWORD", ""),
+        # Solo para el contenedor de pruebas, que usa un certificado autofirmado.
+        confiar_certificado=os.getenv("BA_SQL_CONFIAR_CERTIFICADO") == "si",
     )
