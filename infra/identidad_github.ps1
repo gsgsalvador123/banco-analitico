@@ -39,7 +39,7 @@ if (-not (& $az ad app federated-credential list --id $app --query "[?name=='git
   @{
     name = 'github-main'
     issuer = 'https://token.actions.githubusercontent.com'
-    subject = 'repo:gsgsalvador123/banco-analitico:ref:refs/heads/main'
+    subject = 'repo:gsgsalvador123@154251129/banco-analitico@1440936932:ref:refs/heads/main'
     audiences = @('api://AzureADTokenExchange')
   } | ConvertTo-Json | Set-Content $temporal -Encoding ascii
   & $az ad app federated-credential create --id $app --parameters "@$temporal" --output none

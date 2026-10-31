@@ -34,6 +34,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Abrir el firewall a este runner
+        id: firewall
         run: |
           ip=$(curl -fsS https://api.ipify.org)
           az sql server firewall-rule create -g "$GRUPO" -s "${SERVIDOR%%.*}" \
@@ -53,7 +54,7 @@ jobs:
           BA_SQL_PASSWORD: ${{ secrets.BA_SQL_PASSWORD }}
 
       - name: Cerrar el firewall
-        if: always()
+        if: always() && steps.firewall.outcome != 'skipped'
         run: |
           az sql server firewall-rule delete -g "$GRUPO" -s "${SERVIDOR%%.*}" \
             -n "gh-runner-${{ github.run_id }}"
