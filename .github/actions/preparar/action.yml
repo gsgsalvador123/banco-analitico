@@ -16,12 +16,8 @@ runs:
     - name: Instalar driver de SQL Server
       shell: bash
       run: |
-        if ! odbcinst -q -d | grep -q "ODBC Driver 18 for SQL Server"; then
-          curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc > /dev/null
-          echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/24.04/prod noble main" | sudo tee /etc/apt/sources.list.d/mssql-release.list
-          sudo apt-get update -qq
-          sudo ACCEPT_EULA=Y apt-get install -y -qq msodbcsql18
-        fi
+        sudo apt-get update -qq
+        sudo ACCEPT_EULA=Y apt-get install -y -qq msodbcsql18
 
     - name: Recuperar Berka
       uses: actions/cache@v4
