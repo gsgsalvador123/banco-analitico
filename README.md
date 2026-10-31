@@ -2,7 +2,7 @@
 
 Banco simulado de punta a punta: cada día hábil llegan datos nuevos, se validan, se cargan en un data warehouse en Azure SQL y actualizan reportes en Power BI y Excel.
 
-**Estado:** fase 1 terminada en local. El simulador, el análisis exploratorio y el almacén funcionan en SQL Server LocalDB. Todavía no hay recursos en la nube.
+**Estado:** el almacén está en Azure SQL y GitHub Actions carga un día hábil simulado de lunes a viernes. Power Apps está en construcción; Power BI y Excel aún no empiezan.
 
 ## Empieza por aquí
 
