@@ -1,0 +1,126 @@
+name: Informe mensual
+
+on:
+  schedule:
+    # 02:37 en Perú, después de la carga. Corre los días 1 a 3 y sigue solo si es el primer día hábil.
+    - cron: "37 7 1-3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+
+concurrency:
+  group: azure-sql
+
+env:
+  GRUPO: rg-banco-analitico
+
+jobs:
+  informe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SERVIDOR: ${{ secrets.BA_SQL_SERVER }}
+    steps:
+      - name: Comprobar si hoy es el primer día hábil
+        id: hoy
+        run: |
+          dia=$(TZ=America/Lima date +%-d)
+          semana=$(TZ=America/Lima date +%u)
+          # Día 1 entre semana; o día 2 o 3 si es lunes y el mes empezó en fin de semana.
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] \
+            || { [ "$dia" = 1 ] && [ "$semana" -le 5 ]; } \
+            || { [ "$dia" -le 3 ] && [ "$semana" = 1 ]; }; then
+            echo "corre=si" >> "$GITHUB_OUTPUT"
+          else
+            echo "corre=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.hoy.outputs.corre == 'si'
+
+      - uses: actions/setup-python@v5
+        if: steps.hoy.outputs.corre == 'si'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Preparar Python y el controlador de SQL
+        if: steps.hoy.outputs.corre == 'si'
+        run: |
+          pip install -q -r requirements.txt
+          sudo apt-get update -qq
+          sudo ACCEPT_EULA=Y apt-get install -y -qq msodbcsql18
+
+      - uses: azure/login@v2
+        if: steps.hoy.outputs.corre == 'si'
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Abrir el firewall a este runner
+        id: firewall
+        if: steps.hoy.outputs.corre == 'si'
+        run: |
+          ip=$(curl -fsS https://api.ipify.org)
+          az sql server firewall-rule create -g "$GRUPO" -s "${SERVIDOR%%.*}" \
+            -n "gh-runner-${{ github.run_id }}" --start-ip-address "$ip" --end-ip-address "$ip" \
+            --output none
+
+      - name: Generar el informe
+        id: informe
+        if: steps.hoy.outputs.corre == 'si'
+        run: python -m banco.informe generar salida
+        env:
+          PYTHONPATH: src
+          BA_SQL_SERVER: ${{ secrets.BA_SQL_SERVER }}
+          BA_SQL_DATABASE: ${{ secrets.BA_SQL_DATABASE }}
+          BA_SQL_DRIVER: ODBC Driver 18 for SQL Server
+          BA_SQL_AUTH: sql
+          BA_SQL_USER: bi_reader
+          BA_SQL_PASSWORD: ${{ secrets.BA_BI_PASSWORD }}
+
+      - name: Cerrar el firewall
+        if: always() && steps.firewall.outcome != 'skipped'
+        run: |
+          az sql server firewall-rule delete -g "$GRUPO" -s "${SERVIDOR%%.*}" \
+            -n "gh-runner-${{ github.run_id }}"
+
+      - name: Publicar el Excel para descargar
+        if: steps.informe.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Informe_${{ steps.informe.outputs.mes }}
+          path: ${{ steps.informe.outputs.archivo }}
+          retention-days: 90
+
+      - name: Avisar por Power Automate
+        if: always() && steps.hoy.outputs.corre == 'si' && env.URL_AVISO != ''
+        continue-on-error: true
+        run: |
+          jq -n \
+            --arg estado "${{ steps.informe.outcome == 'success' && 'OK' || 'ERROR' }}" \
+            --arg mes "${{ steps.informe.outputs.mes }}" \
+            --arg url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            '{estado: $estado, mes: $mes, url: $url}' \
+            | curl -fsS --retry 3 -o /dev/null -X POST -H "Content-Type: application/json" --data @- "$URL_AVISO"
+        env:
+          URL_AVISO: ${{ secrets.POWER_AUTOMATE_URL_INFORME }}
+
+      - name: Abrir un issue si falló
+        if: failure()
+        run: |
+          titulo="El informe mensual falló"
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          numero=$(gh issue list --state open --search "\"$titulo\" in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$numero" ]; then
+            gh issue comment "$numero" --body "Volvió a fallar: $url"
+          else
+            gh issue create --title "$titulo" --body "Revisar la ejecución: $url"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}

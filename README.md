@@ -2,7 +2,7 @@
 
 Banco simulado de punta a punta: cada día hábil llegan datos nuevos, se validan, se cargan en un data warehouse en Azure SQL y actualizan reportes en Power BI y Excel.
 
-**Estado:** el almacén está en Azure SQL y GitHub Actions carga un día hábil simulado de lunes a viernes. La app de cobranzas ya registra gestiones y el reporte de Power BI tiene sus 6 páginas en Desktop, aún sin publicar. Excel aún no empieza.
+**Estado:** el almacén está en Azure SQL y GitHub Actions carga un día hábil simulado de lunes a viernes. La app de cobranzas ya registra gestiones, el reporte de Power BI tiene sus 6 páginas en Desktop, aún sin publicar, y GitHub Actions genera el informe mensual en Excel a partir de una plantilla.
 
 ![Resumen ejecutivo del reporte de Power BI](docs/capturas/powerbi/01_resumen_ejecutivo.png)
 
@@ -61,6 +61,7 @@ La carga del histórico tarda unos 6 minutos.
 ├── data/raw/berka/   Archivos originales, sin modificar
 ├── data/landing/     Archivos que publica el simulador
 ├── docs/             Plan, guía, diccionario, hallazgos y capturas
+├── excel/            Plantilla del informe mensual y el script que la crea
 ├── infra/            Scripts para desplegar en Azure y dar acceso a GitHub Actions
 ├── notebooks/        Análisis exploratorio
 ├── powerapps/        Fórmulas de la app de cobranzas
