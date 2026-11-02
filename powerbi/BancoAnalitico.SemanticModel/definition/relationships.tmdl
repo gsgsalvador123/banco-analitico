@@ -1,0 +1,75 @@
+relationship 883b9ca0-e6a4-5ab8-979a-94ed60aba9c2
+	fromColumn: Saldos.mes_key
+	toColumn: Fecha.fecha_key
+
+relationship 0cadfd8d-d000-5f6b-8d33-8aff61e95eee
+	fromColumn: Saldos.cuenta_key
+	toColumn: Cuenta.cuenta_key
+
+relationship 0dbe7f90-bdf7-5054-9dca-9a98bea96e33
+	fromColumn: Saldos.cliente_key
+	toColumn: Cliente.cliente_key
+
+relationship b115f37a-8f09-53b1-bbd8-1ec52b4fa3e0
+	fromColumn: Saldos.distrito_key
+	toColumn: Distrito.distrito_key
+
+relationship 125e1987-ade9-51af-8387-7ec153db0a1a
+	fromColumn: Saldos.tarjeta_key
+	toColumn: Tarjeta.tarjeta_key
+
+relationship c475cee1-f1d4-52a1-8a7a-60408059a9e3
+	fromColumn: Cartera.mes_key
+	toColumn: Fecha.fecha_key
+
+relationship ef4097e5-7ce9-5672-87f1-2525a122c01e
+	fromColumn: Cartera.prestamo_key
+	toColumn: Prestamo.prestamo_key
+
+relationship ef3334bc-6010-5c6c-897e-fcbe39fd5b03
+	fromColumn: Cartera.cuenta_key
+	toColumn: Cuenta.cuenta_key
+
+relationship 1a992b2f-574b-55f2-86b4-d551d6cb61df
+	fromColumn: Cartera.cliente_key
+	toColumn: Cliente.cliente_key
+
+relationship bb1dc6eb-94ca-5262-840f-7e5e61dee978
+	fromColumn: Cartera.distrito_key
+	toColumn: Distrito.distrito_key
+
+relationship 023c4274-cc7e-5921-8ff8-0003498c5ac7
+	fromColumn: Gestiones.fecha_key
+	toColumn: Fecha.fecha_key
+
+relationship f0464692-e7a7-5eb8-a1c1-ccab1e50897e
+	fromColumn: Gestiones.prestamo_key
+	toColumn: Prestamo.prestamo_key
+
+relationship dd289ae1-0fbb-5e2a-9955-8c3b92a98177
+	fromColumn: Gestiones.cuenta_key
+	toColumn: Cuenta.cuenta_key
+
+relationship 8026ee11-2bbf-5728-8e8e-d404be6ea783
+	fromColumn: Gestiones.cliente_key
+	toColumn: Cliente.cliente_key
+
+relationship b24b4450-e040-5bb0-9ba9-b5b18947045d
+	fromColumn: Gestiones.distrito_key
+	toColumn: Distrito.distrito_key
+
+relationship cff3ce8e-f2be-5eb4-b83a-398f2f272991
+	fromColumn: Margen.mes_key
+	toColumn: Fecha.fecha_key
+
+relationship 4fd6213d-545e-5d12-afdd-c1b2ca379944
+	fromColumn: Margen.distrito_key
+	toColumn: Distrito.distrito_key
+
+relationship e87d344f-2769-5b24-b5c1-8afeb8eab563
+	fromColumn: Lotes.fecha_negocio
+	toColumn: Fecha.fecha
+
+relationship 6ce38132-9978-5e6d-ba23-07af1361d840
+	fromColumn: Cuarentena.lote_id
+	toColumn: Lotes.lote_id

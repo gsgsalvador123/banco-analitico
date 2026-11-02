@@ -1,0 +1,48 @@
+table Cuarentena
+	lineageTag: f8c9cbf4-a1c7-562e-bc1e-3d4abedaf20f
+
+	column lote_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e3050605-979e-5aa9-8310-4439d1ae9799
+		summarizeBy: none
+		sourceColumn: lote_id
+
+	column fecha_negocio
+		dataType: dateTime
+		isHidden
+		formatString: dd/mm/yyyy
+		lineageTag: d6a086d3-dbfd-5983-aa83-a7243d129c1d
+		summarizeBy: none
+		sourceColumn: fecha_negocio
+
+	column regla
+		dataType: string
+		isHidden
+		lineageTag: 5245811d-6671-50c6-b43b-c1992d19f588
+		summarizeBy: none
+		sourceColumn: regla
+
+	column descripcion
+		dataType: string
+		lineageTag: d11c2c62-e04f-5734-81be-f2646c07f8b0
+		summarizeBy: none
+		sourceColumn: descripcion
+
+	column filas
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: c8ff6571-4816-5d04-bf7e-94fe4043fa68
+		summarizeBy: none
+		sourceColumn: filas
+
+	partition Cuarentena = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_cuarentena_por_regla"]}[Data]
+				in
+				    Vista

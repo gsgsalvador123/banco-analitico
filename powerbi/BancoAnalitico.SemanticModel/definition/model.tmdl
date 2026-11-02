@@ -1,0 +1,21 @@
+model Model
+	culture: es-ES
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-ES
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+ref table Fecha
+ref table Distrito
+ref table Cuenta
+ref table Cliente
+ref table Tarjeta
+ref table Prestamo
+ref table Saldos
+ref table Cartera
+ref table Gestiones
+ref table Margen
+ref table Lotes
+ref table Cuarentena
+ref table Medidas

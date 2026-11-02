@@ -1,0 +1,92 @@
+table Fecha
+	dataCategory: Time
+	lineageTag: 62147eab-bd08-5e84-b179-21befba945b9
+
+	column fecha_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 13b3e227-8827-54ad-aafe-5754d92e0f06
+		summarizeBy: none
+		sourceColumn: fecha_key
+
+	column fecha
+		dataType: dateTime
+		isKey
+		formatString: dd/mm/yyyy
+		lineageTag: 85bfa9a4-a692-5f0c-9d4b-b9c84d239b53
+		summarizeBy: none
+		sourceColumn: fecha
+
+	column anio
+		dataType: int64
+		formatString: 0
+		lineageTag: a25d98f1-3422-55fa-ae35-1bc41dbf6b73
+		summarizeBy: none
+		sourceColumn: anio
+
+	column trimestre
+		dataType: int64
+		formatString: 0
+		lineageTag: fd8f9a59-05b9-587a-9e24-7adf0a04f39b
+		summarizeBy: none
+		sourceColumn: trimestre
+
+	column mes
+		dataType: int64
+		formatString: 0
+		lineageTag: 63d60a21-9b7f-5ff7-a6aa-5104b65449bb
+		summarizeBy: none
+		sourceColumn: mes
+
+	column nombre_mes
+		dataType: string
+		lineageTag: ff1529d9-248d-5abc-a927-36f36a727e4d
+		summarizeBy: none
+		sourceColumn: nombre_mes
+
+	column anio_mes
+		dataType: string
+		lineageTag: 60118662-cb48-5d88-bd14-ee7ba313e5fa
+		summarizeBy: none
+		sourceColumn: anio_mes
+
+	column es_fin_mes
+		dataType: boolean
+		isHidden
+		lineageTag: 03ea5613-9681-5dc5-953c-85eb361e5b86
+		summarizeBy: none
+		sourceColumn: es_fin_mes
+
+	column fin_mes
+		dataType: dateTime
+		isHidden
+		formatString: dd/mm/yyyy
+		lineageTag: 1ee5d610-f248-5dfb-9ef0-415cf6e44292
+		summarizeBy: none
+		sourceColumn: fin_mes
+
+	column mes_cerrado
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c25bf0c0-f9c1-53d1-9ee3-f994905fd801
+		summarizeBy: none
+		sourceColumn: mes_cerrado
+
+	column en_ultimos_13
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 34d50bbf-0cf7-50c7-b0b1-d2fc0ad77213
+		summarizeBy: none
+		sourceColumn: en_ultimos_13
+
+	partition Fecha = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_dim_fecha"]}[Data]
+				in
+				    Vista

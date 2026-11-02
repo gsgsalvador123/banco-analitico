@@ -1,0 +1,33 @@
+table Tarjeta
+	lineageTag: 2719b2fd-d1fc-550e-89d8-6a58a6c3bdd2
+
+	column tarjeta_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f77b090b-879e-5979-b8df-beca8baec05d
+		summarizeBy: none
+		sourceColumn: tarjeta_key
+
+	column tarjeta_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 76ad08ba-a3c3-5b74-a431-bd339fbd67b1
+		summarizeBy: none
+		sourceColumn: tarjeta_id
+
+	column tipo_tarjeta
+		dataType: string
+		lineageTag: 9a3888c6-4146-5ab7-aac0-e6fc75156cb1
+		summarizeBy: none
+		sourceColumn: tipo_tarjeta
+
+	partition Tarjeta = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_dim_tarjeta"]}[Data]
+				in
+				    Vista

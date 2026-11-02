@@ -1,0 +1,67 @@
+table Distrito
+	lineageTag: e022926f-0f8e-5ee9-8c8a-d59936baa8e6
+
+	column distrito_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: adcf75c1-2e25-5f7e-a854-3e9102166480
+		summarizeBy: none
+		sourceColumn: distrito_key
+
+	column distrito_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f241b434-412e-5bd1-b87f-8f4857efa50c
+		summarizeBy: none
+		sourceColumn: distrito_id
+
+	column distrito
+		dataType: string
+		lineageTag: a8b60b49-f333-55fd-88e8-574d53ae910a
+		summarizeBy: none
+		sourceColumn: distrito
+
+	column region
+		dataType: string
+		lineageTag: 6686e733-8b6f-5e9b-9a00-ec46e90e6502
+		summarizeBy: none
+		sourceColumn: region
+
+	column habitantes
+		dataType: int64
+		formatString: #,0
+		lineageTag: 581aa62e-c7c6-5cd3-8e9d-091dcaa94d20
+		summarizeBy: none
+		sourceColumn: habitantes
+
+	column poblacion_urbana_pct
+		dataType: double
+		formatString: 0.0
+		lineageTag: 57551f93-fd0a-5c2a-a82c-6b2c0298cd04
+		summarizeBy: none
+		sourceColumn: poblacion_urbana_pct
+
+	column salario_promedio
+		dataType: int64
+		formatString: #,0
+		lineageTag: d9444d7b-240d-5c1e-9ec9-d0099b7c0b57
+		summarizeBy: none
+		sourceColumn: salario_promedio
+
+	column desempleo_96
+		dataType: double
+		formatString: 0.00
+		lineageTag: 749527a8-0b43-5005-96e8-25def89b1e4a
+		summarizeBy: none
+		sourceColumn: desempleo_96
+
+	partition Distrito = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_dim_distrito"]}[Data]
+				in
+				    Vista

@@ -1,0 +1,56 @@
+table Margen
+	lineageTag: 002ea7cb-b3aa-5d0c-a6e9-ae8d82a4cb03
+
+	column mes_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1e88cc8-7a5a-52cb-a141-6059fe8a0e04
+		summarizeBy: none
+		sourceColumn: mes_key
+
+	column distrito_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 389de677-8289-530a-bdd1-60f8a4140c52
+		summarizeBy: none
+		sourceColumn: distrito_key
+
+	column producto
+		dataType: string
+		lineageTag: f8c845cd-3ea6-589f-9148-2a9d35d6d952
+		summarizeBy: none
+		sourceColumn: producto
+
+	column componente
+		dataType: string
+		lineageTag: a8e0765c-1ff4-58c1-8039-97e734a4e55a
+		summarizeBy: none
+		sourceColumn: componente
+		sortByColumn: orden
+
+	column orden
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d409d811-1092-5f3d-95c4-32d9d6bdf74c
+		summarizeBy: none
+		sourceColumn: orden
+
+	column monto
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 76c180ce-4c74-5644-a7ed-e721ccb94227
+		summarizeBy: none
+		sourceColumn: monto
+
+	partition Margen = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_margen_componente"]}[Data]
+				in
+				    Vista

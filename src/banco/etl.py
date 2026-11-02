@@ -166,6 +166,7 @@ def _ejecutar(cx: pyodbc.Connection, carpeta: Path, nombres: tuple[str, ...], ti
             cx.execute("EXEC dw.usp_cargar_dimensiones @fecha_negocio = ?", fecha)
             cx.execute("EXEC dw.usp_cargar_hechos @lote_id = ?", lote_id)
             _avance("Hechos cargados")
+            cx.execute("EXEC dw.usp_cargar_gestiones")
             recibidas, cargadas, apartadas = _conciliar_carga(cx, lote_id)
             cx.commit()
         except Exception:

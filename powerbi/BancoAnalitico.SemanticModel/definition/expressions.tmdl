@@ -1,0 +1,5 @@
+expression Servidor = "ba-sql-gdhi0s.database.windows.net" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 1f4a8d79-e157-53a7-a820-cde31cefdc55
+
+expression BaseDatos = "BancoAnalitico" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: b8d70dcf-a771-5a1e-beb8-4332950af4bc

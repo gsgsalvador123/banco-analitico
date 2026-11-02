@@ -1,0 +1,83 @@
+table Prestamo
+	lineageTag: 048643e8-5677-5897-954e-98ad1b8b4e76
+
+	column prestamo_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 5a44aec4-c361-5979-979d-b2f574d2b2d3
+		summarizeBy: none
+		sourceColumn: prestamo_key
+
+	column prestamo_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 9b443bb9-00dd-5b42-9b71-10ab706cccfd
+		summarizeBy: none
+		sourceColumn: prestamo_id
+
+	column cuenta_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dbf42523-08bf-5d65-9541-bc3153a322e3
+		summarizeBy: none
+		sourceColumn: cuenta_id
+
+	column estado
+		dataType: string
+		lineageTag: 31a89ba8-c7e0-5321-9dc7-f896ebfd228f
+		summarizeBy: none
+		sourceColumn: estado
+
+	column es_problematico
+		dataType: boolean
+		isHidden
+		lineageTag: ca5d5514-5b6a-589c-94f6-f7cda1d44a4f
+		summarizeBy: none
+		sourceColumn: es_problematico
+
+	column fecha_concesion
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: 00ad7611-fe4f-5520-8ceb-97313b83eef2
+		summarizeBy: none
+		sourceColumn: fecha_concesion
+
+	column monto
+		dataType: decimal
+		formatString: #,0
+		lineageTag: 79570753-d21e-5e4b-90df-59ff0a49b900
+		summarizeBy: none
+		sourceColumn: monto
+
+	column plazo_meses
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fa2edb0d-95df-544a-a5ec-090b0403fda5
+		summarizeBy: none
+		sourceColumn: plazo_meses
+
+	column plazo
+		dataType: string
+		lineageTag: ea69462e-f9fc-50cc-af01-fb63ac68197a
+		summarizeBy: none
+		sourceColumn: plazo
+		sortByColumn: plazo_meses
+
+	column cuota
+		dataType: decimal
+		formatString: #,0
+		lineageTag: e22433de-bb9c-54d6-8da2-17707e404477
+		summarizeBy: none
+		sourceColumn: cuota
+
+	partition Prestamo = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_dim_prestamo"]}[Data]
+				in
+				    Vista

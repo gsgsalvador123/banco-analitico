@@ -1,0 +1,4 @@
+role 'Analista Moravia del Sur'
+	modelPermission: read
+
+	tablePermission Distrito = [region] = "south Moravia"

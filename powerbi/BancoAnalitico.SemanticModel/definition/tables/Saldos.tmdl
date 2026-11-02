@@ -1,0 +1,115 @@
+table Saldos
+	lineageTag: 28256bf8-cfac-560e-9325-84528347d3cc
+
+	column mes_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 23755a9c-4d1b-5227-ae60-21e87dff07e5
+		summarizeBy: none
+		sourceColumn: mes_key
+
+	column cuenta_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 879dc41b-e3e4-5532-afa8-96dc45477b72
+		summarizeBy: none
+		sourceColumn: cuenta_key
+
+	column cliente_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 39a873e4-50d7-5481-895e-0ea0b31f9fd2
+		summarizeBy: none
+		sourceColumn: cliente_key
+
+	column distrito_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: df72d7d8-29da-5908-b4a0-e9e16fb26509
+		summarizeBy: none
+		sourceColumn: distrito_key
+
+	column tarjeta_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 160c5af0-4927-538a-88b7-a9058e2a4204
+		summarizeBy: none
+		sourceColumn: tarjeta_key
+
+	column saldo_cierre
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 6e82dac2-e884-52c6-98f8-27ef0f24509f
+		summarizeBy: none
+		sourceColumn: saldo_cierre
+
+	column saldo_promedio
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 3ee89e0c-ce4b-5089-8534-4f7a10fc146b
+		summarizeBy: none
+		sourceColumn: saldo_promedio
+
+	column abonos
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: f3668f8c-30da-5269-8934-a0fa0f1f10be
+		summarizeBy: none
+		sourceColumn: abonos
+
+	column cargos
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: ee6a5f3d-27c8-5bd1-a0c6-5380fb0f2196
+		summarizeBy: none
+		sourceColumn: cargos
+
+	column num_movimientos
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 5eabfef8-7a98-5f1f-bdfa-dcc505d19007
+		summarizeBy: none
+		sourceColumn: num_movimientos
+
+	column intereses_pagados
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 79c05761-cb40-55cc-b0cf-dad8c30f6451
+		summarizeBy: none
+		sourceColumn: intereses_pagados
+
+	column comisiones
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 81160225-1805-5bad-9452-88671701e27b
+		summarizeBy: none
+		sourceColumn: comisiones
+
+	column sanciones
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 5e8369fe-1635-55a2-b876-8dfc2fcd1013
+		summarizeBy: none
+		sourceColumn: sanciones
+
+	partition Saldos = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_fact_saldo_mensual"]}[Data]
+				in
+				    Vista

@@ -34,7 +34,8 @@ SELECT f.fecha AS mes,
        s.comisiones,
        s.sanciones,
        s.intereses_pagados,
-       ISNULL(p.intereses_estimados, 0) + s.comisiones + s.sanciones - s.intereses_pagados AS margen_estimado
+       ISNULL(p.intereses_estimados, 0) + s.comisiones + s.sanciones - s.intereses_pagados AS margen_estimado,
+       IIF(f.fecha <= (SELECT MAX(l.fecha_negocio) FROM ctl.lote l WHERE l.estado = 'OK'), 1, 0) AS mes_cerrado
 FROM saldos s
 JOIN dw.dim_fecha f ON f.fecha_key = s.mes_key
 LEFT JOIN prestamos p ON p.mes_key = s.mes_key;

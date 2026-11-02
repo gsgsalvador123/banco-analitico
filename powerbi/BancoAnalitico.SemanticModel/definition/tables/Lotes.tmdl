@@ -1,0 +1,81 @@
+table Lotes
+	lineageTag: 7577ffa7-3509-5173-95bb-de156582918d
+
+	column lote_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 23a26f2f-2653-52d7-8f0e-30f2c0d77295
+		summarizeBy: none
+		sourceColumn: lote_id
+
+	column fecha_negocio
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: 1ac0d37f-6360-5cb0-a939-86cc5c2f3b9d
+		summarizeBy: none
+		sourceColumn: fecha_negocio
+
+	column tipo
+		dataType: string
+		lineageTag: e36e40a4-d072-5d7f-a968-c2e162d1d614
+		summarizeBy: none
+		sourceColumn: tipo
+
+	column estado
+		dataType: string
+		lineageTag: d2d43672-346c-566e-9c16-b75b929cfa3a
+		summarizeBy: none
+		sourceColumn: estado
+
+	column inicio
+		dataType: dateTime
+		isHidden
+		formatString: dd/mm/yyyy hh:nn
+		lineageTag: a8a0b620-053d-5b40-88f2-ddfaf7e67310
+		summarizeBy: none
+		sourceColumn: inicio
+
+	column fin
+		dataType: dateTime
+		isHidden
+		formatString: dd/mm/yyyy hh:nn
+		lineageTag: 4312bbd7-8ae5-5149-b196-1cfa0f901d0d
+		summarizeBy: none
+		sourceColumn: fin
+
+	column filas_recibidas
+		dataType: int64
+		formatString: #,0
+		lineageTag: af802cc7-9e1d-53a7-bf42-7cc895a03aaa
+		summarizeBy: none
+		sourceColumn: filas_recibidas
+
+	column filas_cargadas
+		dataType: int64
+		formatString: #,0
+		lineageTag: 07d41a41-befa-5346-916d-536e1c48394a
+		summarizeBy: none
+		sourceColumn: filas_cargadas
+
+	column filas_cuarentena
+		dataType: int64
+		formatString: #,0
+		lineageTag: c1f92caa-ebbc-59fb-8ace-90d400369ae2
+		summarizeBy: none
+		sourceColumn: filas_cuarentena
+
+	column tasa_cuarentena
+		dataType: double
+		formatString: 0.00%
+		lineageTag: 94dd7c50-35eb-585a-91ef-f78789a3e0e2
+		summarizeBy: none
+		sourceColumn: tasa_cuarentena
+
+	partition Lotes = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_calidad_lotes"]}[Data]
+				in
+				    Vista

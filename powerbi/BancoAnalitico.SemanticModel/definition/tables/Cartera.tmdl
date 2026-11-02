@@ -1,0 +1,104 @@
+table Cartera
+	lineageTag: 9febddc3-ebd3-50af-935c-cf89fb7621f4
+
+	column mes_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 885d7717-8ca7-5bb3-af81-357fc91304da
+		summarizeBy: none
+		sourceColumn: mes_key
+
+	column prestamo_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 124e54ed-e74c-553b-a823-661df78bc444
+		summarizeBy: none
+		sourceColumn: prestamo_key
+
+	column cuenta_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4fcd87cd-4031-5849-822f-eefdf8cb9b44
+		summarizeBy: none
+		sourceColumn: cuenta_key
+
+	column cliente_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 55fb78ad-fb99-5b2a-8743-d20876861bb1
+		summarizeBy: none
+		sourceColumn: cliente_key
+
+	column distrito_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3bb58a5d-c780-5d4a-9b23-85a5d0df1a14
+		summarizeBy: none
+		sourceColumn: distrito_key
+
+	column cuotas_esperadas
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7107dc9f-ed06-5c29-a824-dc23c1d4ad16
+		summarizeBy: none
+		sourceColumn: cuotas_esperadas
+
+	column cuotas_pagadas
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a86e8b77-e60f-5790-aa36-9d013aed5e50
+		summarizeBy: none
+		sourceColumn: cuotas_pagadas
+
+	column cuotas_atrasadas
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7a8e3050-8f5c-5d9f-a74a-787ad2af0248
+		summarizeBy: none
+		sourceColumn: cuotas_atrasadas
+
+	column capital_pendiente
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 68941442-8965-5a0e-abac-68e2ff2d3e74
+		summarizeBy: none
+		sourceColumn: capital_pendiente
+
+	column interes_estimado
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 26363870-6ccc-57ea-bfa3-5cac946a692f
+		summarizeBy: none
+		sourceColumn: interes_estimado
+
+	column en_mora
+		dataType: boolean
+		isHidden
+		lineageTag: 02c7dea5-c170-51c7-9e77-2a1886b3e05f
+		summarizeBy: none
+		sourceColumn: en_mora
+
+	column tramo_atraso
+		dataType: string
+		lineageTag: 9a7f978e-44a6-5662-8433-94c736462fde
+		summarizeBy: none
+		sourceColumn: tramo_atraso
+
+	partition Cartera = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_fact_prestamo_mensual"]}[Data]
+				in
+				    Vista

@@ -1,0 +1,86 @@
+table Gestiones
+	lineageTag: 1f4159ff-b274-51d0-8fba-87fe5e91eb2e
+
+	column gestion_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fa1ea389-8f5f-57d5-907f-ce8a3fd989ed
+		summarizeBy: none
+		sourceColumn: gestion_id
+
+	column fecha_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cf341bf6-f58c-59cf-9086-3202b1aff260
+		summarizeBy: none
+		sourceColumn: fecha_key
+
+	column prestamo_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c16d60ce-a5fd-54ca-a4e3-7be1f6cd52d1
+		summarizeBy: none
+		sourceColumn: prestamo_key
+
+	column cuenta_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0b5217c2-de74-511f-9456-43af5f9f34df
+		summarizeBy: none
+		sourceColumn: cuenta_key
+
+	column cliente_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 611cbd1c-0376-5ea1-a5ef-7569454bc4a3
+		summarizeBy: none
+		sourceColumn: cliente_key
+
+	column distrito_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1f908884-03a1-5cff-a96d-fa4572707184
+		summarizeBy: none
+		sourceColumn: distrito_key
+
+	column resultado
+		dataType: string
+		lineageTag: 3218f040-02bb-5af0-b4ce-740b860c2b8c
+		summarizeBy: none
+		sourceColumn: resultado
+
+	column monto_prometido
+		dataType: decimal
+		isHidden
+		formatString: #,0
+		lineageTag: 863167e8-40c2-5135-81c6-23e84b692908
+		summarizeBy: none
+		sourceColumn: monto_prometido
+
+	column fecha_compromiso
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: bff5ab72-1052-51c2-991d-24e606ed902b
+		summarizeBy: none
+		sourceColumn: fecha_compromiso
+
+	column estado_compromiso
+		dataType: string
+		lineageTag: 48400c88-85f9-5ab1-b692-a7c33e843cc2
+		summarizeBy: none
+		sourceColumn: estado_compromiso
+
+	partition Gestiones = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_fact_gestion_cobranza"]}[Data]
+				in
+				    Vista

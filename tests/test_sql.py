@@ -161,6 +161,38 @@ def test_mes_sin_cerrar_no_infla_la_mora(cx):
     assert _valor(conexion, consulta, "2026-07") <= _valor(conexion, consulta, "2026-06")
 
 
+def test_gestion_llega_al_almacen_sin_duplicarse(cx):
+    conexion, _ = cx
+    prestamo = _valor(conexion, "SELECT TOP 1 prestamo_id FROM mart.vw_bandeja_cobranza")
+    conexion.execute(
+        "INSERT ops.gestion_cobranza (prestamo_id, analista, resultado, monto_prometido, fecha_compromiso) "
+        "VALUES (?, 'Prueba', 'Promesa de pago', 1000, '20200101')",
+        prestamo,
+    )
+    conexion.execute("EXEC dw.usp_cargar_gestiones")
+    conexion.execute("EXEC dw.usp_cargar_gestiones")
+    assert _valor(conexion, "SELECT COUNT(*) FROM mart.vw_fact_gestion_cobranza") == 1
+    assert _valor(conexion, "SELECT estado_compromiso FROM mart.vw_fact_gestion_cobranza") == "Vencido"
+
+
+def test_margen_por_componentes_coincide_con_kpi(cx):
+    conexion, _ = cx
+    diferencia = _valor(
+        conexion,
+        "SELECT ABS(SUM(c.monto) - MAX(k.margen_estimado)) FROM mart.vw_margen_componente c "
+        "JOIN mart.vw_dim_fecha f ON f.fecha_key = c.mes_key "
+        "JOIN mart.vw_kpi_mensual k ON k.mes = f.fecha WHERE k.anio_mes = '2026-06'",
+    )
+    assert diferencia < 0.01
+
+
+def test_solo_se_cierran_meses_completos(cx):
+    conexion, _ = cx
+    consulta = "SELECT mes_cerrado FROM mart.vw_kpi_mensual WHERE anio_mes = ?"
+    assert _valor(conexion, consulta, "2026-06") == 1
+    assert _valor(conexion, consulta, "2026-07") == 0
+
+
 def test_kpi_mensual_no_tiene_huecos(cx):
     conexion, _ = cx
     meses = _valor(conexion, "SELECT COUNT(*) FROM mart.vw_kpi_mensual")

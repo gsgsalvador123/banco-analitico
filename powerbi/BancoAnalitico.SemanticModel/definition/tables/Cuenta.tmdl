@@ -1,0 +1,46 @@
+table Cuenta
+	lineageTag: 4db5c172-806c-5459-b1e8-937380e44613
+
+	column cuenta_key
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f7c8863e-8cba-57fa-83c0-37ed6a3e6708
+		summarizeBy: none
+		sourceColumn: cuenta_key
+
+	column cuenta_id
+		dataType: int64
+		formatString: 0
+		lineageTag: ddec31e0-ad3e-591e-9ddb-915f3cc49aed
+		summarizeBy: none
+		sourceColumn: cuenta_id
+
+	column frecuencia
+		dataType: string
+		lineageTag: 1e2ca282-c084-5afa-9d21-65f7a224bf45
+		summarizeBy: none
+		sourceColumn: frecuencia
+
+	column fecha_apertura
+		dataType: dateTime
+		formatString: dd/mm/yyyy
+		lineageTag: 3cc441d1-41a0-51cd-a663-526e93a438e1
+		summarizeBy: none
+		sourceColumn: fecha_apertura
+
+	column es_actual
+		dataType: boolean
+		isHidden
+		lineageTag: cdf12969-aff2-5b34-93d0-6b076082f482
+		summarizeBy: none
+		sourceColumn: es_actual
+
+	partition Cuenta = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(Servidor, BaseDatos),
+				    Vista = Origen{[Schema = "mart", Item = "vw_dim_cuenta"]}[Data]
+				in
+				    Vista

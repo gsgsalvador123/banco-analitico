@@ -1,0 +1,40 @@
+{
+  "name": "BancoAnalitico",
+  "dataColors": [
+    "#12284B",
+    "#1F8A8C",
+    "#7A8CA5",
+    "#E0A030",
+    "#C8372D",
+    "#4F6D9A",
+    "#9DB4C0",
+    "#5B6776"
+  ],
+  "foreground": "#12284B",
+  "background": "#FFFFFF",
+  "tableAccent": "#12284B",
+  "good": "#1F8A8C",
+  "bad": "#C8372D",
+  "textClasses": {
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 10,
+      "color": "#5B6776"
+    },
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 24,
+      "color": "#12284B"
+    },
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 12,
+      "color": "#12284B"
+    },
+    "header": {
+      "fontFace": "Segoe UI Semibold",
+      "fontSize": 11,
+      "color": "#12284B"
+    }
+  }
+}
