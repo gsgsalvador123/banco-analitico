@@ -2,7 +2,7 @@
 
 Banco simulado de punta a punta: cada día hábil llegan datos nuevos, se validan, se cargan en un data warehouse en Azure SQL y actualizan reportes en Power BI y Excel.
 
-**Estado:** el almacén está en Azure SQL y GitHub Actions carga un día hábil simulado de lunes a viernes. La app de cobranzas ya registra gestiones, el reporte de Power BI tiene sus 6 páginas en Desktop, aún sin publicar, y GitHub Actions genera el informe mensual en Excel a partir de una plantilla.
+**Estado:** el almacén está en Azure SQL y GitHub Actions carga un día hábil simulado de lunes a viernes. La app de cobranzas registra gestiones que vuelven al almacén, el reporte de Power BI está publicado con sus 6 páginas y GitHub Actions genera el informe mensual en Excel. Power Automate avisa por correo de cada carga y de cada informe. El servicio gratuito de Azure termina a fines de noviembre de 2026 y la app se suspende desde el 15 de diciembre.
 
 ![Resumen ejecutivo del reporte de Power BI](docs/capturas/powerbi/01_resumen_ejecutivo.png)
 
