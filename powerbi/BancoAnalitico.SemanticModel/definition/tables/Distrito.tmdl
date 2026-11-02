@@ -25,6 +25,7 @@ table Distrito
 
 	column region
 		dataType: string
+		isHidden
 		lineageTag: 6686e733-8b6f-5e9b-9a00-ec46e90e6502
 		summarizeBy: none
 		sourceColumn: region
@@ -56,6 +57,11 @@ table Distrito
 		lineageTag: 749527a8-0b43-5005-96e8-25def89b1e4a
 		summarizeBy: none
 		sourceColumn: desempleo_96
+
+	column region_es = SWITCH(Distrito[region], "Prague", "Praga", "central Bohemia", "Bohemia Central", "south Bohemia", "Bohemia del Sur", "west Bohemia", "Bohemia del Oeste", "north Bohemia", "Bohemia del Norte", "east Bohemia", "Bohemia del Este", "south Moravia", "Moravia del Sur", "north Moravia", "Moravia del Norte", Distrito[region])
+		dataType: string
+		lineageTag: f98076ce-b91a-52d6-b954-969befad44f8
+		summarizeBy: none
 
 	partition Distrito = m
 		mode: import

@@ -2,53 +2,39 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
   "name": "7ba8ef117274c6b2a42c",
   "position": {
-    "x": 1016,
-    "y": 12,
+    "x": 0,
+    "y": 0,
     "z": 1100,
-    "height": 62,
-    "width": 240,
+    "height": 64,
+    "width": 1280,
     "tabOrder": 1100
   },
   "visual": {
-    "visualType": "slicer",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Distrito"
-                    }
-                  },
-                  "Property": "region"
-                }
-              },
-              "queryRef": "Distrito.region",
-              "nativeQueryRef": "region",
-              "active": true
-            }
-          ]
-        }
-      }
-    },
+    "visualType": "textbox",
     "objects": {
-      "data": [
+      "general": [
         {
           "properties": {
-            "mode": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Dropdown'"
-                }
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Rentabilidad",
+                    "textStyle": {
+                      "fontSize": "17pt",
+                      "fontWeight": "bold",
+                      "color": "#FFFFFF"
+                    }
+                  }
+                ]
               }
-            }
+            ]
           }
         }
-      ],
-      "header": [
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
         {
           "properties": {
             "show": {
@@ -58,37 +44,28 @@
                 }
               }
             },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Región'"
-                }
-              }
-            },
-            "fontColor": {
+            "color": {
               "solid": {
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5B6776'"
+                      "Value": "'#12284B'"
                     }
                   }
                 }
               }
             },
-            "textSize": {
+            "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "9D"
+                  "Value": "0D"
                 }
               }
             }
           }
         }
-      ]
-    },
-    "visualContainerObjects": {
-      "background": [
+      ],
+      "title": [
         {
           "properties": {
             "show": {
@@ -101,7 +78,7 @@
           }
         }
       ],
-      "title": [
+      "border": [
         {
           "properties": {
             "show": {

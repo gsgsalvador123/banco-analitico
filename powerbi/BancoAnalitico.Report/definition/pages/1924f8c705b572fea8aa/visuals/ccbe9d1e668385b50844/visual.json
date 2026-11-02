@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
   "name": "ccbe9d1e668385b50844",
   "position": {
-    "x": 512,
-    "y": 84,
+    "x": 824,
+    "y": 16,
     "z": 1300,
-    "height": 88,
-    "width": 232,
+    "height": 32,
+    "width": 196,
     "tabOrder": 1300
   },
   "visual": {
@@ -23,12 +23,11 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "Ratio de mora"
+                  "Property": "Cierre de datos"
                 }
               },
-              "queryRef": "Medidas.Ratio de mora",
-              "nativeQueryRef": "Ratio de mora",
-              "displayName": "Ratio de mora"
+              "queryRef": "Medidas.Cierre de datos",
+              "nativeQueryRef": "Cierre de datos"
             }
           ]
         }
@@ -41,7 +40,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "10D"
                 }
               }
             },
@@ -50,16 +49,9 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#12284B'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
                 }
               }
             }
@@ -72,25 +64,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#5B6776'"
-                    }
-                  }
+                  "Value": "false"
                 }
               }
             }
@@ -105,56 +79,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "border": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E2E6EC'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
+                  "Value": "false"
                 }
               }
             }
@@ -162,6 +87,19 @@
         }
       ],
       "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
         {
           "properties": {
             "show": {

@@ -3,49 +3,103 @@
   "name": "4ef087abd2c71b8698cf",
   "position": {
     "x": 24,
-    "y": 12,
+    "y": 168,
     "z": 1700,
-    "height": 62,
-    "width": 860,
+    "height": 24,
+    "width": 299,
     "tabOrder": 1700
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Nota gestiones"
+                }
+              },
+              "queryRef": "Medidas.Nota gestiones",
+              "nativeQueryRef": "Nota gestiones"
+            }
+          ]
+        }
+      }
+    },
     "objects": {
-      "general": [
+      "labels": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Cobranzas",
-                    "textStyle": {
-                      "fontSize": "18pt",
-                      "fontWeight": "bold",
-                      "color": "#12284B"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Lo que el equipo registró en la app. Los datos entran al almacén en la carga siguiente.",
-                    "textStyle": {
-                      "fontSize": "11pt",
-                      "color": "#5B6776"
-                    }
-                  }
-                ]
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
               }
-            ]
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B6776'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
     },
     "visualContainerObjects": {
       "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
         {
           "properties": {
             "show": {

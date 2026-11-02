@@ -3,49 +3,103 @@
   "name": "3b4ed0b42a7bf670e91a",
   "position": {
     "x": 24,
-    "y": 12,
+    "y": 168,
     "z": 1800,
-    "height": 62,
-    "width": 860,
+    "height": 24,
+    "width": 402,
     "tabOrder": 1800
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Nota cartera en mora"
+                }
+              },
+              "queryRef": "Medidas.Nota cartera en mora",
+              "nativeQueryRef": "Nota cartera en mora"
+            }
+          ]
+        }
+      }
+    },
     "objects": {
-      "general": [
+      "labels": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Cartera y mora",
-                    "textStyle": {
-                      "fontSize": "18pt",
-                      "fontWeight": "bold",
-                      "color": "#12284B"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "La mora se mide contando cuotas pagadas contra esperadas, con tolerancia de una cuota.",
-                    "textStyle": {
-                      "fontSize": "11pt",
-                      "color": "#5B6776"
-                    }
-                  }
-                ]
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
               }
-            ]
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B6776'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
     },
     "visualContainerObjects": {
       "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
         {
           "properties": {
             "show": {

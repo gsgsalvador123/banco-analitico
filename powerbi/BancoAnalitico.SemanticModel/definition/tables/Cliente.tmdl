@@ -31,9 +31,22 @@ table Cliente
 
 	column rango_edad
 		dataType: string
+		isHidden
 		lineageTag: 678312aa-7c10-589b-908c-be042a666a26
 		summarizeBy: none
 		sourceColumn: rango_edad
+
+	column edad = Cliente[rango_edad]
+		dataType: string
+		lineageTag: 37164f66-99a8-5cfd-96a8-40ee3f070af9
+		summarizeBy: none
+		sortByColumn: orden_edad
+
+	column orden_edad = SWITCH(Cliente[rango_edad], "Menos de 25", 1, "25 a 39", 2, "40 a 59", 3, "60 o más", 4, 5)
+		dataType: int64
+		isHidden
+		lineageTag: ce9756fd-e9d2-5142-b2c7-9e207a6ca9f0
+		summarizeBy: none
 
 	partition Cliente = m
 		mode: import

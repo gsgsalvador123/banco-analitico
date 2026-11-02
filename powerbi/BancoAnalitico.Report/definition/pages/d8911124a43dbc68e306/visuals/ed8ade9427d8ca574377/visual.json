@@ -3,49 +3,103 @@
   "name": "ed8ade9427d8ca574377",
   "position": {
     "x": 24,
-    "y": 12,
+    "y": 168,
     "z": 1700,
-    "height": 62,
-    "width": 860,
+    "height": 24,
+    "width": 299,
     "tabOrder": 1700
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Nota lote"
+                }
+              },
+              "queryRef": "Medidas.Nota lote",
+              "nativeQueryRef": "Nota lote"
+            }
+          ]
+        }
+      }
+    },
     "objects": {
-      "general": [
+      "labels": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Calidad de datos",
-                    "textStyle": {
-                      "fontSize": "18pt",
-                      "fontWeight": "bold",
-                      "color": "#12284B"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Cada fila recibida queda cargada o en cuarentena con su motivo. Solo se cuentan las cargas diarias.",
-                    "textStyle": {
-                      "fontSize": "11pt",
-                      "color": "#5B6776"
-                    }
-                  }
-                ]
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
               }
-            ]
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5B6776'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
           }
         }
       ]
     },
     "visualContainerObjects": {
       "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
         {
           "properties": {
             "show": {

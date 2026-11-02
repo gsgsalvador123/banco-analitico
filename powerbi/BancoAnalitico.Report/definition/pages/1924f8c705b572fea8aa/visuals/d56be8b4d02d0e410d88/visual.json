@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
   "name": "d56be8b4d02d0e410d88",
   "position": {
-    "x": 24,
-    "y": 12,
+    "x": 272,
+    "y": 104,
     "z": 1800,
-    "height": 62,
-    "width": 860,
+    "height": 88,
+    "width": 236,
     "tabOrder": 1800
   },
   "visual": {
@@ -19,22 +19,9 @@
               {
                 "textRuns": [
                   {
-                    "value": "Resumen ejecutivo",
+                    "value": " ",
                     "textStyle": {
-                      "fontSize": "18pt",
-                      "fontWeight": "bold",
-                      "color": "#12284B"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "El margen estimado sigue negativo: el banco presta menos de un tercio de lo que capta.",
-                    "textStyle": {
-                      "fontSize": "11pt",
-                      "color": "#5B6776"
+                      "fontSize": "8pt"
                     }
                   }
                 ]
@@ -46,6 +33,68 @@
     },
     "visualContainerObjects": {
       "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E2E6EC'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
         {
           "properties": {
             "show": {

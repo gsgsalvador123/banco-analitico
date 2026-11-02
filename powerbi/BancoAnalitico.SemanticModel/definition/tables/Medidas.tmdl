@@ -10,7 +10,7 @@ table Medidas
 	measure 'Depósitos' =
 			VAR corte = [Mes de corte]
 			RETURN IF(NOT ISBLANK(corte), CALCULATE(SUM(Saldos[saldo_cierre]), KEEPFILTERS(Fecha[fin_mes] = corte)))
-		formatString: #,0.0,," M CZK"
+		formatString: #,0" CZK"
 		displayFolder: Negocio
 		lineageTag: 6873f76a-df4c-5e68-86c5-16525e3baca9
 
@@ -24,7 +24,7 @@ table Medidas
 	measure 'Cartera' =
 			VAR corte = [Mes de corte]
 			RETURN IF(NOT ISBLANK(corte), CALCULATE(SUM(Cartera[capital_pendiente]), KEEPFILTERS(Fecha[fin_mes] = corte)))
-		formatString: #,0.0,," M CZK"
+		formatString: #,0" CZK"
 		displayFolder: Riesgo
 		lineageTag: 2c6ac667-ce37-585c-96e8-a4f4ea2b8847
 
@@ -38,9 +38,16 @@ table Medidas
 	measure 'Cartera en mora' =
 			VAR corte = [Mes de corte]
 			RETURN IF(NOT ISBLANK(corte), CALCULATE(CALCULATE(SUM(Cartera[capital_pendiente]), Cartera[en_mora] = TRUE()), KEEPFILTERS(Fecha[fin_mes] = corte)))
-		formatString: #,0.0,," M CZK"
+		formatString: #,0" CZK"
 		displayFolder: Riesgo
 		lineageTag: 74c36a06-8129-585c-8a7e-667570fe21c2
+
+	measure 'Cartera en mora top 10' =
+			VAR valor = [Cartera en mora]
+			RETURN IF(NOT ISBLANK(valor) && RANKX(ALLSELECTED(Distrito[distrito]), [Cartera en mora]) <= 10, valor)
+		formatString: #,0" CZK"
+		displayFolder: Riesgo
+		lineageTag: 490a02da-f860-5d8d-b429-74a5cd02c015
 
 	measure 'Préstamos en mora' =
 			VAR corte = [Mes de corte]
@@ -82,12 +89,19 @@ table Medidas
 		displayFolder: Rentabilidad
 		lineageTag: 309a76d8-e66c-5773-8fc6-f1d18f3c3976
 
-	measure 'Monto del componente' =
+	measure 'Ingresos estimados' =
 			VAR corte = [Mes de corte]
-			RETURN IF(NOT ISBLANK(corte), CALCULATE(SUM(Margen[monto]), KEEPFILTERS(Fecha[fin_mes] = corte)))
+			RETURN IF(NOT ISBLANK(corte), CALCULATE(CALCULATE(SUM(Margen[monto]), Margen[orden] <> 4), KEEPFILTERS(Fecha[fin_mes] = corte)))
 		formatString: #,0" CZK"
 		displayFolder: Rentabilidad
-		lineageTag: 52ac6914-7973-513a-bef8-763ae66c8844
+		lineageTag: 31f35d27-6407-5ed4-bb80-0de10667eff5
+
+	measure 'Intereses pagados' =
+			VAR corte = [Mes de corte]
+			RETURN IF(NOT ISBLANK(corte), CALCULATE(-CALCULATE(SUM(Margen[monto]), Margen[orden] = 4), KEEPFILTERS(Fecha[fin_mes] = corte)))
+		formatString: #,0" CZK"
+		displayFolder: Rentabilidad
+		lineageTag: 4ea9ea70-59d7-514d-84fd-013715d28157
 
 	measure 'Margen estimado 12 meses' =
 			VAR corte = [Mes de corte]
@@ -96,14 +110,6 @@ table Medidas
 		formatString: #,0" CZK"
 		displayFolder: Rentabilidad
 		lineageTag: d8dba664-1a76-5452-a9dd-9278fa4e9d47
-
-	measure 'Margen del mes anterior' =
-			VAR corte = [Mes de corte]
-			RETURN IF(NOT ISBLANK(corte),
-			    CALCULATE(SUM(Margen[monto]), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1)))
-		formatString: #,0" CZK"
-		displayFolder: Rentabilidad
-		lineageTag: 3f6b7921-d625-5ab7-b0e7-01e3e88c18fb
 
 	measure 'Margen del mes en curso (parcial)' =
 			CALCULATE(SUM(Margen[monto]), REMOVEFILTERS(Fecha), Fecha[mes_cerrado] = 0)
@@ -117,6 +123,13 @@ table Medidas
 		formatString: #,0
 		displayFolder: Negocio
 		lineageTag: e4595594-1656-5831-a635-4f8df8f9d8c3
+
+	measure 'Distritos con clientes' =
+			VAR corte = [Mes de corte]
+			RETURN IF(NOT ISBLANK(corte), CALCULATE(DISTINCTCOUNT(Saldos[distrito_key]), KEEPFILTERS(Fecha[fin_mes] = corte)))
+		formatString: #,0
+		displayFolder: Negocio
+		lineageTag: 4d529258-2a37-56ee-8208-25a75406d953
 
 	measure 'Saldo por cliente' =
 			DIVIDE([Depósitos], [Clientes])
@@ -178,6 +191,12 @@ table Medidas
 		displayFolder: Calidad
 		lineageTag: 745648db-4fe1-5e2c-a957-1f9e9a42fa48
 
+	measure 'Filas cargadas' =
+			CALCULATE(SUM(Lotes[filas_cargadas]), Lotes[tipo] = "DIARIO") + 0
+		formatString: #,0
+		displayFolder: Calidad
+		lineageTag: 17aae1c9-d210-598f-ac55-026bc2bd4ce0
+
 	measure 'Filas en cuarentena' =
 			CALCULATE(SUM(Lotes[filas_cuarentena]), Lotes[tipo] = "DIARIO") + 0
 		formatString: #,0
@@ -195,6 +214,202 @@ table Medidas
 		formatString: #,0
 		displayFolder: Calidad
 		lineageTag: 1aa4d417-41c5-5b37-a895-7dc0e580ebaa
+
+	measure 'Nombre del corte' =
+			LOWER(FORMAT([Mes de corte], "mmmm yyyy"))
+		displayFolder: Textos
+		lineageTag: b7d8df7d-7442-51fe-a665-4b001fbcbaeb
+
+	measure 'Cierre de datos' =
+			"Cierre: " & [Nombre del corte]
+		displayFolder: Textos
+		lineageTag: 0d62b156-488e-5ac2-a6ee-3dcaf73fae85
+
+	measure 'Hallazgo resumen' =
+			"Margen estimado de " & [Nombre del corte] & ": " & FORMAT([Margen estimado], "#,0")
+			    & " CZK. La cartera equivale al " & FORMAT([Cartera sobre depósitos], "0%") & " de los depósitos."
+		displayFolder: Textos
+		lineageTag: 976c937c-f587-578a-9175-e6048a2e81a2
+
+	measure 'Hallazgo rentabilidad' =
+			VAR pagados = [Intereses pagados]
+			VAR ingresos = [Ingresos estimados]
+			RETURN "Los intereses pagados (" & FORMAT(pagados, "#,0") & " CZK) "
+			    & IF(pagados > ingresos, "superan", "no superan") & " a los ingresos (" & FORMAT(ingresos, "#,0")
+			    & " CZK). El interés de préstamos usa una tasa supuesta del 12 %."
+		displayFolder: Textos
+		lineageTag: 57872055-64de-5794-89e0-75ca2b8ebd3a
+
+	measure 'Hallazgo cartera' =
+			VAR mora = [Cartera en mora]
+			RETURN [Préstamos en mora] & " préstamos en mora, " & FORMAT([Ratio de mora], "0.0%")
+			    & " de la cartera. Más de 90 días pesa " & FORMAT(DIVIDE(CALCULATE([Cartera en mora], Cartera[tramo_atraso] = "Más de 90"), mora), "0%")
+			    & " de la mora. Se tolera una cuota de atraso."
+		displayFolder: Textos
+		lineageTag: 17c34ead-709f-50e1-99fc-0b0ce2ac3368
+
+	measure 'Hallazgo clientes' =
+			VAR region = MAXX(TOPN(1, ALLSELECTED(Distrito[region_es]), [Depósitos]), Distrito[region_es])
+			VAR parte = DIVIDE(CALCULATE([Depósitos], Distrito[region_es] = region), CALCULATE([Depósitos], ALLSELECTED(Distrito)))
+			RETURN region & " concentra el " & FORMAT(parte, "0%") & " de los depósitos. El saldo medio es de "
+			    & FORMAT([Saldo por cliente], "#,0") & " CZK por cliente."
+		displayFolder: Textos
+		lineageTag: a4e99218-6533-5016-b8f3-93fb287347c4
+
+	measure 'Hallazgo cobranzas' =
+			[Préstamos gestionados] & " de " & [Préstamos en mora]
+			    & " préstamos en mora con gestión registrada. Lo de la app entra al almacén en la carga siguiente."
+		displayFolder: Textos
+		lineageTag: e5da1124-78e4-5409-a615-8a13ffc6b151
+
+	measure 'Hallazgo calidad' =
+			[Filas en cuarentena] & " de " & FORMAT([Filas recibidas], "#,0")
+			    & " filas recibidas quedaron apartadas con su motivo. Solo se cuentan las cargas diarias."
+		displayFolder: Textos
+		lineageTag: a9581cab-f689-531f-a315-21ce52ca6109
+
+	measure 'Nota depósitos' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(SUM(Saldos[saldo_cierre]), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = DIVIDE([Depósitos] - anterior, ABS(anterior))
+			RETURN IF(NOT ISBLANK(cambio),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0.0%;-0.0%;0.0%") & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: 8f5dd2b9-2f46-5df2-917a-74bb10699b16
+
+	measure 'Nota cartera' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(SUM(Cartera[capital_pendiente]), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = DIVIDE([Cartera] - anterior, ABS(anterior))
+			RETURN IF(NOT ISBLANK(cambio),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0.0%;-0.0%;0.0%") & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: 9739533e-1385-50d1-be04-e734f51c222c
+
+	measure 'Nota cartera en mora' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(CALCULATE(SUM(Cartera[capital_pendiente]), Cartera[en_mora] = TRUE()), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = DIVIDE([Cartera en mora] - anterior, ABS(anterior))
+			RETURN IF(NOT ISBLANK(cambio),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0.0%;-0.0%;0.0%") & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: b3af3d21-59c9-5f72-b4cf-75fa29c04c71
+
+	measure 'Nota préstamos en mora' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(CALCULATE(COUNTROWS(Cartera), Cartera[en_mora] = TRUE()), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = ([Préstamos en mora] - anterior) * 1
+			RETURN IF(NOT ISBLANK(anterior),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0;-0;0") & "" & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: 1bd79a32-793e-5db7-b9fe-20275b69667c
+
+	measure 'Nota ratio' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(DIVIDE(CALCULATE(SUM(Cartera[capital_pendiente]), Cartera[en_mora] = TRUE()), SUM(Cartera[capital_pendiente])), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = ([Ratio de mora] - anterior) * 100
+			RETURN IF(NOT ISBLANK(anterior),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0.0;-0.0;0.0") & " pp" & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: 8e883966-d9ae-5d53-992a-84713d02e254
+
+	measure 'Nota margen' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(SUM(Margen[monto]), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = ([Margen estimado] - anterior) * 1
+			RETURN IF(NOT ISBLANK(anterior),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+#,0;-#,0;0") & " CZK" & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: 2ebfd9d3-9637-5410-943a-91204b6eb80e
+
+	measure 'Nota ingresos' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(CALCULATE(SUM(Margen[monto]), Margen[orden] <> 4), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = DIVIDE([Ingresos estimados] - anterior, ABS(anterior))
+			RETURN IF(NOT ISBLANK(cambio),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0.0%;-0.0%;0.0%") & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: b693878b-89e0-5155-ad59-fbe5643a49d6
+
+	measure 'Nota pagados' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(-CALCULATE(SUM(Margen[monto]), Margen[orden] = 4), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = DIVIDE([Intereses pagados] - anterior, ABS(anterior))
+			RETURN IF(NOT ISBLANK(cambio),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0.0%;-0.0%;0.0%") & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: e598d480-bf11-5d99-805c-ac17f9d36113
+
+	measure 'Nota 12 meses' =
+			VAR corte = [Mes de corte]
+			RETURN LOWER(FORMAT(EOMONTH(corte, -11), "mmm yyyy")) & " a " & LOWER(FORMAT(corte, "mmm yyyy"))
+		displayFolder: Textos
+		lineageTag: 8a9b3d4b-2b46-5743-a4d7-0c133883bf85
+
+	measure 'Nota en curso' =
+			"Datos hasta " & FORMAT([Último lote], "dd/mm/yyyy")
+		displayFolder: Textos
+		lineageTag: 29e03716-9c4a-5fbd-8053-feaa2be23b56
+
+	measure 'Nota clientes' =
+			"En " & [Distritos con clientes] & " distritos"
+		displayFolder: Textos
+		lineageTag: 1b70bd8b-d183-590a-b272-8cb28f3e4a52
+
+	measure 'Nota saldo' =
+			VAR corte = [Mes de corte]
+			VAR anterior = CALCULATE(DIVIDE(SUM(Saldos[saldo_cierre]), DISTINCTCOUNT(Saldos[cliente_key])), REMOVEFILTERS(Fecha), Fecha[fin_mes] = EOMONTH(corte, -1))
+			VAR cambio = DIVIDE([Saldo por cliente] - anterior, ABS(anterior))
+			RETURN IF(NOT ISBLANK(cambio),
+			    IF(cambio > 0, "▲ ", IF(cambio < 0, "▼ ", "= ")) & FORMAT(cambio, "+0.0%;-0.0%;0.0%") & " vs. " & LOWER(FORMAT(EOMONTH(corte, -1), "mmmm")))
+		displayFolder: Textos
+		lineageTag: 8b7e4e6f-1b78-525a-bafc-bbc3e8497ca0
+
+	measure 'Nota tarjeta' =
+			FORMAT(CALCULATE([Cuentas], Tarjeta[tipo_tarjeta] <> "Sin tarjeta"), "#,0") & " de "
+			    & FORMAT([Cuentas], "#,0") & " cuentas"
+		displayFolder: Textos
+		lineageTag: b9330aa6-96ce-57e4-923b-dd1a52dd1356
+
+	measure 'Nota gestiones' =
+			[Préstamos gestionados] & IF([Préstamos gestionados] = 1, " préstamo gestionado", " préstamos gestionados")
+		displayFolder: Textos
+		lineageTag: de59f4f6-cae1-5614-9ae8-7f777c957f25
+
+	measure 'Nota cobertura' =
+			"De " & [Préstamos en mora] & " préstamos en mora"
+		displayFolder: Textos
+		lineageTag: e964b43d-58e5-564e-8219-9f78a3ffcf73
+
+	measure 'Nota prometido' =
+			VAR n = CALCULATE(COUNTROWS(Gestiones), Gestiones[resultado] = "Promesa de pago") + 0 RETURN n & IF(n = 1, " promesa de pago", " promesas de pago")
+		displayFolder: Textos
+		lineageTag: 61981d62-8af7-5d2f-b9e4-5c4edb301ee1
+
+	measure 'Nota vencidos' =
+			CALCULATE(COUNTROWS(Gestiones), Gestiones[estado_compromiso] = "Por vencer") + 0 & " por vencer"
+		displayFolder: Textos
+		lineageTag: d7dc409a-d225-5432-9a32-b130f0292408
+
+	measure 'Nota lote' =
+			CALCULATE(COUNTROWS(Lotes), Lotes[tipo] = "DIARIO", Lotes[estado] = "OK") + 0 & " cargas diarias correctas"
+		displayFolder: Textos
+		lineageTag: 92d16e7f-609d-5a6e-91dd-059b3f9d1bfa
+
+	measure 'Nota recibidas' =
+			FORMAT([Filas cargadas], "#,0") & " cargadas"
+		displayFolder: Textos
+		lineageTag: 87b6fb42-4e70-5621-9af6-430ab4f13d60
+
+	measure 'Nota cuarentena' =
+			DISTINCTCOUNT(Cuarentena[descripcion]) + 0 & " motivos distintos"
+		displayFolder: Textos
+		lineageTag: 8c480f42-dce0-5147-8943-8f48c3f769c7
+
+	measure 'Nota tasa' =
+			"Sobre las filas de cargas diarias"
+		displayFolder: Textos
+		lineageTag: ab8c3b82-b977-5c37-9fef-e0d6e153cce8
 
 	column Oculta
 		dataType: int64

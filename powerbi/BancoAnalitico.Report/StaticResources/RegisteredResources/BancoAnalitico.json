@@ -1,20 +1,20 @@
 {
   "name": "BancoAnalitico",
   "dataColors": [
-    "#12284B",
-    "#1F8A8C",
+    "#2F6FD0",
+    "#00A5A0",
     "#7A8CA5",
     "#E0A030",
-    "#C8372D",
+    "#D6453D",
     "#4F6D9A",
     "#9DB4C0",
     "#5B6776"
   ],
   "foreground": "#12284B",
   "background": "#FFFFFF",
-  "tableAccent": "#12284B",
-  "good": "#1F8A8C",
-  "bad": "#C8372D",
+  "tableAccent": "#2F6FD0",
+  "good": "#00A5A0",
+  "bad": "#D6453D",
   "textClasses": {
     "label": {
       "fontFace": "Segoe UI",

@@ -47,6 +47,7 @@ table Fecha
 
 	column anio_mes
 		dataType: string
+		isHidden
 		lineageTag: 60118662-cb48-5d88-bd14-ee7ba313e5fa
 		summarizeBy: none
 		sourceColumn: anio_mes
@@ -81,6 +82,12 @@ table Fecha
 		lineageTag: 34d50bbf-0cf7-50c7-b0b1-d2fc0ad77213
 		summarizeBy: none
 		sourceColumn: en_ultimos_13
+
+	column mes_corto = MID("enefebmarabrmayjunjulagosepoctnovdic", (Fecha[mes] - 1) * 3 + 1, 3) & " " & RIGHT(Fecha[anio], 2)
+		dataType: string
+		lineageTag: 5e9a9c13-ccbb-5f8c-8b5d-661c861ff13c
+		summarizeBy: none
+		sortByColumn: anio_mes
 
 	partition Fecha = m
 		mode: import

@@ -3,157 +3,30 @@
   "name": "9b9bd3fde5a1d3f20c57",
   "position": {
     "x": 24,
-    "y": 184,
+    "y": 104,
     "z": 1500,
-    "height": 488,
-    "width": 740,
+    "height": 88,
+    "width": 299,
     "tabOrder": 1500
   },
   "visual": {
-    "visualType": "tableEx",
-    "query": {
-      "queryState": {
-        "Values": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Lotes"
-                    }
-                  },
-                  "Property": "fecha_negocio"
-                }
-              },
-              "queryRef": "Lotes.fecha_negocio",
-              "nativeQueryRef": "fecha_negocio"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Lotes"
-                    }
-                  },
-                  "Property": "estado"
-                }
-              },
-              "queryRef": "Lotes.estado",
-              "nativeQueryRef": "estado"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Lotes"
-                    }
-                  },
-                  "Property": "filas_recibidas"
-                }
-              },
-              "queryRef": "Lotes.filas_recibidas",
-              "nativeQueryRef": "filas_recibidas"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Lotes"
-                    }
-                  },
-                  "Property": "filas_cargadas"
-                }
-              },
-              "queryRef": "Lotes.filas_cargadas",
-              "nativeQueryRef": "filas_cargadas"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Lotes"
-                    }
-                  },
-                  "Property": "filas_cuarentena"
-                }
-              },
-              "queryRef": "Lotes.filas_cuarentena",
-              "nativeQueryRef": "filas_cuarentena"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Lotes"
-                    }
-                  },
-                  "Property": "tasa_cuarentena"
-                }
-              },
-              "queryRef": "Lotes.tasa_cuarentena",
-              "nativeQueryRef": "tasa_cuarentena"
-            }
-          ]
-        }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Lotes"
-                  }
-                },
-                "Property": "fecha_negocio"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": false
-      }
-    },
+    "visualType": "textbox",
     "objects": {
-      "columnHeaders": [
+      "general": [
         {
           "properties": {
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": " ",
+                    "textStyle": {
+                      "fontSize": "8pt"
                     }
                   }
-                }
+                ]
               }
-            },
-            "backColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#12284B'"
-                    }
-                  }
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
+            ]
           }
         }
       ]
@@ -227,46 +100,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Lotes diarios'"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "12D"
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#12284B'"
-                    }
-                  }
-                }
-              }
-            },
-            "alignment": {
-              "expr": {
-                "Literal": {
-                  "Value": "'left'"
+                  "Value": "false"
                 }
               }
             }
@@ -274,62 +108,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "bb727dcc9e1d5d2029c3",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Lotes"
-              }
-            },
-            "Property": "tipo"
-          }
-        },
-        "type": "Categorical",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "t",
-              "Entity": "Lotes",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "t"
-                          }
-                        },
-                        "Property": "tipo"
-                      }
-                    }
-                  ],
-                  "Values": [
-                    [
-                      {
-                        "Literal": {
-                          "Value": "'DIARIO'"
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
   }
 }

@@ -10,6 +10,7 @@ table Lotes
 
 	column fecha_negocio
 		dataType: dateTime
+		isHidden
 		formatString: dd/mm/yyyy
 		lineageTag: 1ac0d37f-6360-5cb0-a939-86cc5c2f3b9d
 		summarizeBy: none
@@ -70,6 +71,12 @@ table Lotes
 		lineageTag: 94dd7c50-35eb-585a-91ef-f78789a3e0e2
 		summarizeBy: none
 		sourceColumn: tasa_cuarentena
+
+	column fecha_carga = FORMAT(Lotes[fecha_negocio], "dd/mm/yyyy")
+		dataType: string
+		lineageTag: bc615a4a-35c1-5bd3-83da-efea602fbcba
+		summarizeBy: none
+		sortByColumn: fecha_negocio
 
 	partition Lotes = m
 		mode: import

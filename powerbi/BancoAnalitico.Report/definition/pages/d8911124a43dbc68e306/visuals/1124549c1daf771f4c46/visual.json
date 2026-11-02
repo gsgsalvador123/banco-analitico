@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.2.0/schema.json",
   "name": "1124549c1daf771f4c46",
   "position": {
-    "x": 644,
-    "y": 84,
+    "x": 824,
+    "y": 16,
     "z": 1300,
-    "height": 88,
-    "width": 298,
+    "height": 32,
+    "width": 196,
     "tabOrder": 1300
   },
   "visual": {
@@ -23,12 +23,11 @@
                       "Entity": "Medidas"
                     }
                   },
-                  "Property": "Filas en cuarentena"
+                  "Property": "Cierre de datos"
                 }
               },
-              "queryRef": "Medidas.Filas en cuarentena",
-              "nativeQueryRef": "Filas en cuarentena",
-              "displayName": "Filas en cuarentena"
+              "queryRef": "Medidas.Cierre de datos",
+              "nativeQueryRef": "Cierre de datos"
             }
           ]
         }
@@ -41,7 +40,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "24D"
+                  "Value": "10D"
                 }
               }
             },
@@ -50,16 +49,9 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#12284B'"
+                      "Value": "'#FFFFFF'"
                     }
                   }
-                }
-              }
-            },
-            "bold": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
                 }
               }
             }
@@ -72,25 +64,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fontSize": {
-              "expr": {
-                "Literal": {
-                  "Value": "10D"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#5B6776'"
-                    }
-                  }
+                  "Value": "false"
                 }
               }
             }
@@ -105,56 +79,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#FFFFFF'"
-                    }
-                  }
-                }
-              }
-            },
-            "transparency": {
-              "expr": {
-                "Literal": {
-                  "Value": "0D"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "border": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "color": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Literal": {
-                      "Value": "'#E2E6EC'"
-                    }
-                  }
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "8D"
+                  "Value": "false"
                 }
               }
             }
@@ -162,6 +87,19 @@
         }
       ],
       "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
         {
           "properties": {
             "show": {

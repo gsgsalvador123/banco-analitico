@@ -1,7 +1,7 @@
 model Model
-	culture: es-ES
+	culture: es-PE
 	defaultPowerBIDataSourceVersion: powerBI_V3
-	sourceQueryCulture: es-ES
+	sourceQueryCulture: es-PE
 	dataAccessOptions
 		legacyRedirects
 		returnErrorValuesAsNull

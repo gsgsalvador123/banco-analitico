@@ -19,9 +19,15 @@ table Tarjeta
 
 	column tipo_tarjeta
 		dataType: string
+		isHidden
 		lineageTag: 9a3888c6-4146-5ab7-aac0-e6fc75156cb1
 		summarizeBy: none
 		sourceColumn: tipo_tarjeta
+
+	column tarjeta = UPPER(LEFT(Tarjeta[tipo_tarjeta], 1)) & MID(Tarjeta[tipo_tarjeta], 2, 50)
+		dataType: string
+		lineageTag: fa5ea3cf-fad3-5a40-b2eb-abb236d52ca4
+		summarizeBy: none
 
 	partition Tarjeta = m
 		mode: import
