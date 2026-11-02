@@ -67,6 +67,7 @@ La carga del histórico tarda unos 6 minutos.
 ├── powerapps/        Fórmulas de la app de cobranzas
 ├── powerautomate/    Esquema del aviso de carga
 ├── powerbi/          Proyecto de Power BI y el script que lo genera
+├── powerplatform/    Solución exportada con la app y los flujos
 ├── sql/              Tablas, procedimientos, vistas y datos de referencia
 ├── src/banco/        Simulador y carga
 └── tests/            Pruebas
